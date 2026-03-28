@@ -11,7 +11,7 @@ Bot Discord multifonction développé pour un usage personnel, combinant adminis
 
 ## Fonctionnalités
 
-### 🛡️ Administration
+### Administration
 - `.shutdown` — Éteint proprement le bot  
 - `.restart` — Redémarre le bot  
 - `.setgame` — Change le statut du bot  
@@ -26,7 +26,7 @@ Bot Discord multifonction développé pour un usage personnel, combinant adminis
 
 ---
 
-### 🤖 Informations Bot & Serveur
+### Informations Bot & Serveur
 - `.temp` — Température système  
 - `.sysinfo` — Informations système complètes  
 - `.botinfo` — Infos du bot  
@@ -37,7 +37,7 @@ Bot Discord multifonction développé pour un usage personnel, combinant adminis
 
 ---
 
-### 🎮 Jeux & APIs
+### Jeux & APIs
 - `.setsteam` — Définir ton compte Steam  
 - `.steam` — Profil Steam  
 - `.steamtop` — Jeux populaires  
@@ -55,13 +55,13 @@ Bot Discord multifonction développé pour un usage personnel, combinant adminis
 
 ---
 
-### 🔹 qBittorrent
+### qBittorrent
 - `.torrents` — Liste des torrents  
 - `.qbstatus` — Statut global  
 
 ---
 
-### ⏰ Reminder
+### Reminder
 - `.helpreminder` — Aide complète  
 - `.setreminder` — Planifier une date  
 - `.remindme` — Rappel rapide (ex: `1h30m`)  
@@ -70,14 +70,14 @@ Bot Discord multifonction développé pour un usage personnel, combinant adminis
 
 ---
 
-### 🎯 Tarkov Boss Tracker
+### Tarkov Boss Tracker
 - `.boss` — Boss actifs (100%)  
 - `.pve` — Spawns en PVE  
 - `.bosslist` — Liste complète  
 
 ---
 
-### 🎬 HomeLab / Media
+### HomeLab / Media
 - `.radarr` — Stats Radarr  
 - `.sonarr` — Stats Sonarr  
 - `.lastmovie` — Derniers films  
@@ -87,9 +87,7 @@ Bot Discord multifonction développé pour un usage personnel, combinant adminis
 
 ---
 
-### 🔧 Autres
+### Autres
 - `.geo` — Géolocalisation IP  
 
 ---
-
-## ⚙️ Préfixe
