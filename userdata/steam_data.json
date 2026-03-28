@@ -1,0 +1,49 @@
+{
+    "148457970525536256": {
+        "steam_id": "76561197983140587",
+        "profile": {
+            "steamid": "76561197983140587",
+            "communityvisibilitystate": 3,
+            "profilestate": 1,
+            "personaname": "eLFantome",
+            "commentpermission": 1,
+            "profileurl": "https://steamcommunity.com/id/elfant0me/",
+            "avatar": "https://avatars.steamstatic.com/b56dfcda55b62966f8d994c76c6513a07b53d2e8.jpg",
+            "avatarmedium": "https://avatars.steamstatic.com/b56dfcda55b62966f8d994c76c6513a07b53d2e8_medium.jpg",
+            "avatarfull": "https://avatars.steamstatic.com/b56dfcda55b62966f8d994c76c6513a07b53d2e8_full.jpg",
+            "avatarhash": "b56dfcda55b62966f8d994c76c6513a07b53d2e8",
+            "lastlogoff": 1751638094,
+            "personastate": 1,
+            "realname": "Francois",
+            "primaryclanid": "103582791434722900",
+            "timecreated": 1150343881,
+            "personastateflags": 0,
+            "loccountrycode": "CA",
+            "locstatecode": "QC",
+            "loccityid": 4805
+        }
+    },
+    "835604815438282852": {
+        "steam_id": "76561197984599319",
+        "profile": {
+            "steamid": "76561197984599319",
+            "communityvisibilitystate": 3,
+            "profilestate": 1,
+            "personaname": "PaToU420",
+            "profileurl": "https://steamcommunity.com/profiles/76561197984599319/",
+            "avatar": "https://avatars.steamstatic.com/0aed82f7134c341adfc7f58522cea53d9a55cea3.jpg",
+            "avatarmedium": "https://avatars.steamstatic.com/0aed82f7134c341adfc7f58522cea53d9a55cea3_medium.jpg",
+            "avatarfull": "https://avatars.steamstatic.com/0aed82f7134c341adfc7f58522cea53d9a55cea3_full.jpg",
+            "avatarhash": "0aed82f7134c341adfc7f58522cea53d9a55cea3",
+            "lastlogoff": 1741277792,
+            "personastate": 0,
+            "realname": "Patrick",
+            "primaryclanid": "103582791434722900",
+            "timecreated": 1156950932,
+            "personastateflags": 0,
+            "loccountrycode": "CA",
+            "locstatecode": "AB",
+            "loccityid": 4352
+        }
+    }
+}

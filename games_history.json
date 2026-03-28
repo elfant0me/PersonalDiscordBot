@@ -1,0 +1,46 @@
+{
+  "epic": [
+    {
+      "id": "epic_0623017cf9f341efbe07557f46beb4e8",
+      "title": "Firestone Online Idle RPG",
+      "description": "Firestone: Online Idle RPG is a multiplayer fantasy game with idle rpg mechanics. Collect heroes🧙‍♂️, upgrade their gear & skills, and sent them in AFK battles or go on an incremental clicker frenzy to beat monstrous bosses! Chat with guild friends or engage in PVP⚔️.",
+      "thumbnail": "https://cdn1.epicgames.com/spt-assets/69576a28f7154fe9a0dce97508da5163/firestone-online-idle-rpg-1p5r8.png",
+      "start_date": "2025-10-02T15:00:00.000Z",
+      "end_date": "2025-10-09T15:00:00.000Z",
+      "store_url": "https://store.epicgames.com/purchase?offers=1-bda8d2133655435982b9118972792328-0623017cf9f341efbe07557f46beb4e8",
+      "status": "upcoming",
+      "platform": "Epic Games",
+      "original_price": 0,
+      "namespace": "bda8d2133655435982b9118972792328",
+      "offer_id": "0623017cf9f341efbe07557f46beb4e8"
+    },
+    {
+      "id": "epic_aa2e42dde7b64a3183855ac1803a829c",
+      "title": "Eastern Exorcist",
+      "description": "Eastern Exorcist is a stunning 2D side-scrolling action RPG set in a fantasy eastern world with vicious spirits and monsters. Play as a skilled exorcist against chaotic evil to fight your way through the brutal world, and experience different stories of joy and sorrow.",
+      "thumbnail": "https://cdn1.epicgames.com/spt-assets/aa3726b6b8a14b148b58992e8d2700b1/eastern-exorcist-k4a82.png",
+      "start_date": "2025-09-25T15:00:00.000Z",
+      "end_date": "2025-10-02T15:00:00.000Z",
+      "store_url": "https://store.epicgames.com/purchase?offers=1-630a4b97a55545bb9941aee38ec799db-aa2e42dde7b64a3183855ac1803a829c",
+      "status": "current",
+      "platform": "Epic Games",
+      "original_price": 1799,
+      "namespace": "630a4b97a55545bb9941aee38ec799db",
+      "offer_id": "aa2e42dde7b64a3183855ac1803a829c"
+    },
+    {
+      "id": "epic_70d56e56409e4a0384282d9bea1b4e20",
+      "title": "Jorel’s Brother and The Most Important Game of the Galaxy",
+      "description": "“Jorel’s Brother and The Most Important Game of the Galaxy” is a point-and-click adventure about an eight-year-old boy who lives with his eccentric family in the shadow of Jorel, his handsome and popular brother. Based on the award-winning Brazilian animation “Jorel’s Brother”.",
+      "thumbnail": "https://cdn1.epicgames.com/spt-assets/6d5a003f768f4957b4ed48b373f86b32/jorels-brother-and-the-most-important-game-of-the-galaxy-liq5n.png",
+      "start_date": "2025-09-25T15:00:00.000Z",
+      "end_date": "2025-10-02T15:00:00.000Z",
+      "store_url": "https://store.epicgames.com/purchase?offers=1-d5b2727bc277495facca061b00b9876c-70d56e56409e4a0384282d9bea1b4e20",
+      "status": "current",
+      "platform": "Epic Games",
+      "original_price": 1499,
+      "namespace": "d5b2727bc277495facca061b00b9876c",
+      "offer_id": "70d56e56409e4a0384282d9bea1b4e20"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "185.38.150.53:8504": {
+    "name": "Fullsend Drift Server 2 - BDC | Tamworth UK Streets",
+    "ip": "185.38.150.53",
+    "port": 8504,
+    "added_by": 148457970525536256,
+    "guild_id": 148468603685961728
+  },
+  "198.244.254.6:8627": {
+    "name": "Fullsend Drift Server - WDTS | Brooklyn Park",
+    "ip": "198.244.254.6",
+    "port": 8627,
+    "http_port": 8621,
+    "added_by": 148457970525536256,
+    "guild_id": 0
+  },
+  "174.93.197.65:9000": {
+    "name": "eLFantome Drift Server (WDTS)",
+    "ip": "174.93.197.65",
+    "port": 9000,
+    "http_port": 8621,
+    "added_by": 148457970525536256,
+    "guild_id": 148468603685961728
+  }
+}
