@@ -1,4 +1,4 @@
-# 🤖 Personal Discord Bot
+# Python Discord Bot
 
 ![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python)
 ![Discord](https://img.shields.io/badge/Discord-Bot-5865F2?logo=discord)
