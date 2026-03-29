@@ -46,7 +46,7 @@ Bot Discord multifonction développé pour un usage personnel, combinant adminis
 - `.steamhelp` — Aide Steam  
 - `.freegames` — Jeux gratuits Epic Games  
 
-#### 🏎️ Assetto Corsa
+#### Assetto Corsa
 - `.acaddserver` — Ajouter un serveur  
 - `.acserver` — Statut serveur  
 - `.aclist` — Liste des serveurs  
