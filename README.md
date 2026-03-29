@@ -1,93 +1,137 @@
-# Python Discord Bot
+# 🎮 Personal Discord Bot
 
-![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python)
-![Discord](https://img.shields.io/badge/Discord-Bot-5865F2?logo=discord)
-![Status](https://img.shields.io/badge/status-active-success)
-![License](https://img.shields.io/badge/license-personal-lightgrey)
+> ⚡ Ton bot Discord multifonction — admin, réseau, monitoring… et un peu de chaos 😈
 
-Bot Discord multifonction développé pour un usage personnel, combinant administration serveur, monitoring système, automatisation et intégrations avec mon homelab.
-
----
-
-## Fonctionnalités
-
-### Administration
-- `.shutdown` — Éteint proprement le bot  
-- `.restart` — Redémarre le bot  
-- `.setgame` — Change le statut du bot  
-- `.purge` — Supprime des messages  
-- `.setnick` — Change le pseudo du bot  
-- `.cogs` — Gestion des modules  
-- `.nmap` — Scan réseau  
-- `.nmap_help` — Aide nmap  
-- `.freegames setchannel` — Définit le canal des jeux gratuits  
-- `.freegames channel` — Affiche le canal configuré  
-- `.freegames removechannel` — Supprime le canal  
+![Python](https://img.shields.io/badge/Python-3.x-blue)
+![Status](https://img.shields.io/badge/status-online-success)
+![Power](https://img.shields.io/badge/powered%20by-homelab-purple)
 
 ---
 
-### Informations Bot & Serveur
-- `.temp` — Température système  
-- `.sysinfo` — Informations système complètes  
-- `.botinfo` — Infos du bot  
-- `.prefix` — Affiche le préfixe  
-- `.ping` — Latence du bot  
-- `.serverinfo` — Infos du serveur  
-- `.whois` — Infos utilisateur  
+## 🕹️ Présentation
+
+Bienvenue dans **mon bot Discord perso**, créé pour :
+
+* 🚀 automatiser un serveur
+* 🖥️ monitorer un système
+* 🌐 jouer avec le réseau
+* 😎 apprendre en mode *hands-on*
+
+> 💡 Directement connecté à mon homelab → ce bot n’est pas juste “fun”… il est utile.
 
 ---
 
-### Jeux & APIs
-- `.setsteam` — Définir ton compte Steam  
-- `.steam` — Profil Steam  
-- `.steamtop` — Jeux populaires  
-- `.steamstats` — Stats d’un jeu  
-- `.steamrecord` — Record de joueurs  
-- `.steamhelp` — Aide Steam  
-- `.freegames` — Jeux gratuits Epic Games  
+## ⚔️ Commandes principales
 
-#### Assetto Corsa
-- `.acaddserver` — Ajouter un serveur  
-- `.acserver` — Statut serveur  
-- `.aclist` — Liste des serveurs  
-- `.acremove` — Supprimer un serveur  
-- `.acdebug` — Debug  
+### 🛡️ Mode Admin
+
+```
+.shutdown   → Éteint le bot (RIP 💀)
+.restart    → Redémarre le bot
+.purge      → Supprime des messages
+.setnick    → Change le pseudo du bot
+.cogs       → Gère les modules
+```
 
 ---
 
-### qBittorrent
-- `.torrents` — Liste des torrents  
-- `.qbstatus` — Statut global  
+### 🧠 Infos système
+
+```
+.sysinfo    → Stats complètes du serveur
+.temp       → Température du système 🔥
+.botinfo    → Infos du bot
+```
 
 ---
 
-### Reminder
-- `.helpreminder` — Aide complète  
-- `.setreminder` — Planifier une date  
-- `.remindme` — Rappel rapide (ex: `1h30m`)  
-- `.myreminders` — Liste des rappels  
-- `.deletereminder` — Supprimer un rappel  
+### 🌐 Mode Hacker (ou presque 😏)
+
+```
+.nmap       → Scan une cible réseau
+.nmap_help  → Aide pour les scans
+```
 
 ---
 
-### Tarkov Boss Tracker
-- `.boss` — Boss actifs (100%)  
-- `.pve` — Spawns en PVE  
-- `.bosslist` — Liste complète  
+### 🎁 Bonus fun
+
+* Notifications de jeux gratuits 🎮
+* Automatisation Discord
+* Modules personnalisés
 
 ---
 
-### HomeLab / Media
-- `.radarr` — Stats Radarr  
-- `.sonarr` — Stats Sonarr  
-- `.lastmovie` — Derniers films  
-- `.lastseries` — Dernières séries  
-- `.config_jellyfin` — Configuration Jellyfin  
-- `.test_jellyfin` — Test connexion  
+## 🧪 Exemple
+
+```
+.nmap 192.168.2.1
+```
+
+💥 Résultat :
+
+```
+[+] Host is up
+[+] Open ports detected
+```
 
 ---
 
-### Autres
-- `.geo` — Géolocalisation IP  
+## 🧱 Tech utilisée
+
+* 🐍 Python
+* 🤖 Discord.py
+* 🌐 Nmap
+* 🐳 Docker (optionnel)
+* 🖥️ Linux
 
 ---
+
+## 🚀 Installation
+
+```
+git clone https://github.com/elfant0me/PersonalDiscordBot
+cd PersonalDiscordBot
+pip install -r requirements.txt
+python bot.py
+```
+
+---
+
+## 🔐 Configuration
+
+Créer un `.env` :
+
+```
+DISCORD_TOKEN=your_token_here
+```
+
+---
+
+## 🧠 Lore (aka pourquoi ce projet existe)
+
+Ce bot fait partie de mon **homelab** :
+
+* 🌐 Services auto-hébergés
+* 🔒 Accès sécurisé
+* 📊 Monitoring
+* 🧪 Expérimentation réseau
+
+👉 C’est un terrain de jeu… mais version sysadmin.
+
+---
+
+## 👾 Auteur
+
+**eLFantome**
+
+> Geek by day ☕
+> Sysadmin by night 🌙
+> Gamer anytime 🎮
+
+---
+
+## ⚠️ Disclaimer
+
+Ce bot est fait pour usage éducatif / personnel.
+Utilise les commandes réseau de façon responsable 😅
