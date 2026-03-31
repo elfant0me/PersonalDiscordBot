@@ -1,6 +1,6 @@
-# 🎮 Personal Discord Bot
+# Personal Discord Bot
 
-> ⚡ Bot Discord multifonction — admin, réseau, monitoring…
+> Bot Discord multifonction — admin, réseau, monitoring…
 
 ![Python](https://img.shields.io/badge/Python-3.x-blue)
 ![Status](https://img.shields.io/badge/status-online-success)
@@ -8,25 +8,25 @@
 
 ---
 
-## 🕹️ Présentation
+## Présentation
 
-Bienvenue dans **PythonBot**, créé pour :
+**PythonBot**, créé pour :
 
-* 🚀 automatiser un serveur
-* 🖥️ monitorer un système
-* 🌐 jouer avec le réseau
-* 😎 apprendre en mode *hands-on*
+* automatiser un serveur
+* monitorer un système
+* jouer avec le réseau
+* apprendre ptyhon,api etc :)
 
-> 💡 Directement connecté à mon homelab → ce bot n’est pas juste “fun”… il est utile.
+> Héberger sur mon optiplex et me permet d'avoir les stats sonarr,radarr,qbittorrent,temps etc!
 
 ---
 
-## ⚔️ Commandes principales
+## Commandes principales
 
-### 🛡️ Mode Admin
+### Mode Admin
 
 ```
-.shutdown   → Éteint le bot (RIP 💀)
+.shutdown   → Éteint le bot (RIP)
 .restart    → Redémarre le bot
 .purge      → Supprime des messages
 .setnick    → Change le pseudo du bot
@@ -35,17 +35,17 @@ Bienvenue dans **PythonBot**, créé pour :
 
 ---
 
-### 🧠 Infos système
+### Infos système
 
 ```
 .sysinfo    → Stats complètes du serveur
-.temp       → Température du système 🔥
+.temp       → Température du système 
 .botinfo    → Infos du bot
 ```
 
 ---
 
-### 🌐 Mode Hacker (ou presque 😏)
+### NMap
 
 ```
 .nmap       → Scan une cible réseau
@@ -54,7 +54,7 @@ Bienvenue dans **PythonBot**, créé pour :
 
 ---
 
-### 🎁 Bonus fun
+### Bonus fun
 
 * Notifications de jeux gratuits 🎮
 * Automatisation Discord
@@ -62,13 +62,13 @@ Bienvenue dans **PythonBot**, créé pour :
 
 ---
 
-## 🧪 Exemple
+## Exemple
 
 ```
 .nmap 192.168.2.1
 ```
 
-💥 Résultat :
+## Résultat :
 
 ```
 [+] Host is up
@@ -77,17 +77,17 @@ Bienvenue dans **PythonBot**, créé pour :
 
 ---
 
-## 🧱 Tech utilisée
+## Tech utilisée
 
-* 🐍 Python
-* 🤖 Discord.py
-* 🌐 Nmap
-* 🐳 Docker (optionnel)
-* 🖥️ Linux
+* Python
+* Discord.py
+* Nmap
+* Docker (optionnel)
+* Linux
 
 ---
 
-## 🚀 Installation
+## Installation
 
 ```
 git clone https://github.com/elfant0me/PersonalDiscordBot
@@ -98,7 +98,7 @@ python bot.py
 
 ---
 
-## 🔐 Configuration
+## Configuration
 
 Créer un `.env` :
 
@@ -112,16 +112,16 @@ DISCORD_TOKEN=your_token_here
 
 Ce bot fait partie de mon **homelab** :
 
-* 🌐 Services auto-hébergés
-* 🔒 Accès sécurisé
-* 📊 Monitoring
-* 🧪 Expérimentation réseau
+* Services auto-hébergés
+* Accès sécurisé
+* Monitoring
+* Expérimentation réseau
 
-👉 C’est un terrain de jeu… mais version sysadmin.
+C’est un terrain de jeu… mais version sysadmin.
 
 ---
 
-## 👾 Auteur
+## Auteur
 
 **eLFantome**
 
@@ -131,7 +131,7 @@ Ce bot fait partie de mon **homelab** :
 
 ---
 
-## ⚠️ Disclaimer
+## Disclaimer
 
 Ce bot est fait pour usage éducatif / personnel.
 Utilise les commandes réseau de façon responsable 😅
