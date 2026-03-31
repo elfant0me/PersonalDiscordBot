@@ -51,7 +51,15 @@
 .nmap       → Scan une cible réseau
 .nmap_help  → Aide pour les scans
 ```
+### Escape from tarkov
 
+Spawn des boss de **Escape from Tarkov** (eftboss.com)
+
+```
+- `.boss` — Affiche les boss qui spawnent à **100% actuellement**
+- `.pve` — Affiche les spawns de boss propres au **mode PVE**
+- `.bosslist` — Liste tous les boss de Tarkov avec leurs cartes (**orientation PVE**)
+```
 ---
 
 ### Bonus fun
