@@ -1,6 +1,6 @@
 # 🎮 Personal Discord Bot
 
-> ⚡ Ton bot Discord multifonction — admin, réseau, monitoring… et un peu de chaos 😈
+> ⚡ Bot Discord multifonction — admin, réseau, monitoring…
 
 ![Python](https://img.shields.io/badge/Python-3.x-blue)
 ![Status](https://img.shields.io/badge/status-online-success)
@@ -10,7 +10,7 @@
 
 ## 🕹️ Présentation
 
-Bienvenue dans **mon bot Discord perso**, créé pour :
+Bienvenue dans **PythonBot**, créé pour :
 
 * 🚀 automatiser un serveur
 * 🖥️ monitorer un système
