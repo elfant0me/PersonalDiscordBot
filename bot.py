@@ -78,8 +78,6 @@ async def load_extensions():
     """Charge toutes les extensions du bot"""
     extensions = [
         'cogs.admin',             # Fichier: cogs/admin.py
-        'cogs.assetto',           # Fichier: cogs/assetto.py
-        #'cogs.battlefieldstats',  # Fichier: cogs/bf.py
         'cogs.botinfo',           # Fichier: cogs/botinfo.py
         'cogs.serverinfo',        # Fichier: cogs/serverinfo.py
         'cogs.help',              # Fichier: cogs/help.py
@@ -89,7 +87,7 @@ async def load_extensions():
         'cogs.nmap',              # Fichier: cogs/nmap.py
         'cogs.reminder',          # Fichier: cogs/reminder.py
         'cogs.geo',               # Fichier: cogs/geo.py
-        #'cogs.meteo',             # Fichier: cogs/meteo.py
+        'cogs.meteo',             # Fichier: cogs/meteo.py
         'cogs.homebox',          # Fichier: cogs/homebox.py 
         'cogs.qbittorrent',          # Fichier: cogs/qbittorrent.py 
     ]
