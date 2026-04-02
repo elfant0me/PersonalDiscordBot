@@ -2,14 +2,14 @@ import discord
 from discord.ext import commands
 import aiohttp
 import asyncio
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 
 class homebox(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         # Configuration Jellyfin
-        self.jellyfin_url = "http://192.168.2.113:8096"
+        self.jellyfin_url = "https://jellyfin.elfantome.ovh"
         self.api_key = "6903502dc64c45009719e27c85fa8396"
         self.user_id = None
         
@@ -192,6 +192,82 @@ class homebox(commands.Cog):
         except Exception as e:
             print(f"Erreur Sonarr: {e}")
             return {"success": False, "error": str(e)}
+
+    async def get_active_streams(self):
+        """Récupère les streams actifs sur Jellyfin"""
+        url = f"{self.jellyfin_url}/Sessions"
+        headers = {"X-Emby-Token": self.api_key}
+        params = {"ActiveWithinSeconds": 60}
+
+        connector = aiohttp.TCPConnector(ssl=False)
+        async with aiohttp.ClientSession(connector=connector) as session:
+            try:
+                async with session.get(url, headers=headers, params=params, timeout=aiohttp.ClientTimeout(total=10)) as response:
+                    if response.status == 200:
+                        sessions = await response.json()
+                        return [s for s in sessions if s.get("NowPlayingItem")], True
+                    else:
+                        print(f"[jellyfin view] Erreur HTTP {response.status}")
+                        return [], False
+            except Exception as e:
+                print(f"[jellyfin view] Exception: {type(e).__name__}: {e}")
+                return [], False
+
+    def format_stream_info(self, session):
+        """Formate les informations d'un stream actif"""
+        item = session.get("NowPlayingItem", {})
+        user = session.get("UserName", "Inconnu")
+        client = session.get("Client", "Inconnu")
+        device = session.get("DeviceName", "Inconnu")
+
+        title = item.get("Name", "Titre inconnu")
+        item_type = item.get("Type", "")
+        series = item.get("SeriesName")
+        season = item.get("ParentIndexNumber")
+        episode = item.get("IndexNumber")
+
+        # Construire le titre affiché
+        if item_type == "Episode" and series:
+            display_title = f"{series} — S{season:02d}E{episode:02d} · {title}"
+        else:
+            year = item.get("ProductionYear", "")
+            display_title = f"{title} ({year})" if year else title
+
+        # Progression
+        position_ticks = session.get("PlayState", {}).get("PositionTicks", 0)
+        runtime_ticks = item.get("RunTimeTicks", 0)
+        if runtime_ticks:
+            percent = int((position_ticks / runtime_ticks) * 100)
+            pos_min = position_ticks // 600_000_000
+            total_min = runtime_ticks // 600_000_000
+            progress = f"{pos_min}min / {total_min}min ({percent}%)"
+        else:
+            progress = "N/A"
+
+        # Pause ou lecture
+        is_paused = session.get("PlayState", {}).get("IsPaused", False)
+        status = "⏸️ En pause" if is_paused else "▶️ En lecture"
+
+        # Qualité / transcodage
+        play_method = session.get("PlayState", {}).get("PlayMethod", "")
+        if play_method == "DirectPlay":
+            quality = "🟢 Direct Play"
+        elif play_method == "DirectStream":
+            quality = "🟡 Direct Stream"
+        else:
+            quality = "🔴 Transcodage"
+
+        return {
+            "display_title": display_title,
+            "user": user,
+            "client": client,
+            "device": device,
+            "progress": progress,
+            "status": status,
+            "quality": quality,
+            "item_id": item.get("Id"),
+            "item_type": item_type,
+        }
 
     def format_movie_info(self, movie):
         """Formate les informations d'un film"""
@@ -500,6 +576,228 @@ class homebox(commands.Cog):
             
             embed.set_footer(text="Jellyfin Bot", icon_url="https://jellyfin.org/images/favicon.ico")
             await ctx.send(embed=embed)
+
+    async def get_watch_stats(self, days: int = 7):
+        """Récupère les statistiques de visionnage des X derniers jours"""
+        headers = {"X-Emby-Token": self.api_key}
+        # Jellyfin activity log endpoint
+        url = f"{self.jellyfin_url}/user_usage_stats/user_activity"
+        params = {
+            "days": days,
+            "end_date": datetime.now().strftime("%Y-%m-%d"),
+        }
+
+        async with aiohttp.ClientSession() as session:
+            try:
+                async with session.get(url, headers=headers, params=params) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        return data, True
+                    else:
+                        # Fallback: utiliser /System/ActivityLog/Entries
+                        return None, False
+            except Exception as e:
+                print(f"Erreur stats: {e}")
+                return None, False
+
+    async def get_watch_stats_fallback(self, days: int = 7):
+        """Récupère les stats depuis le log d'activité natif de Jellyfin"""
+        headers = {"X-Emby-Token": self.api_key}
+        url = f"{self.jellyfin_url}/System/ActivityLog/Entries"
+        min_date = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%dT00:00:00.000Z")
+        params = {
+            "startIndex": 0,
+            "limit": 1000,
+            "hasUserId": "true",
+            "minDate": min_date,
+        }
+
+        # Mots-clés Jellyfin pour les événements de lecture (anglais + français)
+        PLAY_KEYWORDS = ("playback", "play", "lecture", "stream", "watched")
+
+        connector = aiohttp.TCPConnector(ssl=False)
+        async with aiohttp.ClientSession(connector=connector) as session:
+            try:
+                async with session.get(url, headers=headers, params=params, timeout=aiohttp.ClientTimeout(total=15)) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        entries = data.get("Items", [])
+                        print(f"[jellyfin stats] {len(entries)} entrées récupérées sur {days} jours")
+
+                        # Filtrer les événements de lecture (Type ou Name contenant un mot-clé)
+                        play_events = [
+                            e for e in entries
+                            if any(kw in e.get("Type", "").lower() for kw in PLAY_KEYWORDS)
+                            or any(kw in e.get("Name", "").lower() for kw in PLAY_KEYWORDS)
+                        ]
+
+                        print(f"[jellyfin stats] {len(play_events)} événements de lecture filtrés")
+
+                        # Debug structure d'une entrée pour trouver le bon champ username
+                        if play_events:
+                            pe = play_events[0]
+                            print(f"[jellyfin stats] Clés: {list(pe.keys())}")
+                            print(f"[jellyfin stats] Type={pe.get('Type')} | Name={pe.get('Name')} | UserName={pe.get('UserName')} | UserId={pe.get('UserId')} | ShortOverview={pe.get('ShortOverview')}")
+
+                        # Compter par utilisateur
+                        # Jellyfin met souvent le nom dans ShortOverview ex: "elfantome played ..."
+                        user_counts = {}
+                        for e in play_events:
+                            user = e.get("UserName") or None
+                            if not user:
+                                short = e.get("ShortOverview", "")
+                                if short:
+                                    user = short.split(" ")[0]
+                            user = user or "Inconnu"
+                            user_counts[user] = user_counts.get(user, 0) + 1
+
+                        return {
+                            "total_plays": len(play_events),
+                            "total_entries": len(entries),
+                            "user_counts": user_counts,
+                            "days": days,
+                        }, True
+                    else:
+                        body = await response.text()
+                        print(f"[jellyfin stats] Erreur HTTP {response.status}: {body[:200]}")
+                        return None, False
+            except Exception as e:
+                print(f"[jellyfin stats] Exception: {type(e).__name__}: {e}")
+                return None, False
+
+    # ── Groupe de commandes .jellyfin ──────────────────────────────────────
+
+    @commands.group(name="jellyfin", invoke_without_command=True)
+    async def jellyfin_group(self, ctx):
+        """Commandes Jellyfin — sous-commandes: view, stats"""
+        embed = discord.Embed(
+            title="📡 Jellyfin — Aide",
+            description=(
+                "**Sous-commandes disponibles :**\n\n"
+                "`.jellyfin view` — Streams actifs en ce moment\n"
+                "`.jellyfin stats` — Statistiques des 7 derniers jours"
+            ),
+            color=discord.Color.blurple(),
+            timestamp=datetime.now()
+        )
+        embed.set_footer(text="Jellyfin Bot", icon_url="https://jellyfin.org/images/favicon.ico")
+        await ctx.send(embed=embed)
+
+    @jellyfin_group.command(name="view")
+    async def jellyfin_view(self, ctx):
+        """Affiche les streams actifs sur Jellyfin: !jellyfin view"""
+        await ctx.send("📡 Récupération des streams actifs...")
+
+        streams, success = await self.get_active_streams()
+
+        if not success:
+            embed = discord.Embed(
+                title="❌ Erreur Jellyfin",
+                description="Impossible de récupérer les sessions. Vérifiez la configuration.",
+                color=discord.Color.red()
+            )
+            await ctx.send(embed=embed)
+            return
+
+        if not streams:
+            embed = discord.Embed(
+                title="📡 Streams Jellyfin",
+                description="Aucun stream actif en ce moment.",
+                color=discord.Color.orange(),
+                timestamp=datetime.now()
+            )
+            embed.set_footer(text="Jellyfin Bot", icon_url="https://jellyfin.org/images/favicon.ico")
+            await ctx.send(embed=embed)
+            return
+
+        embed = discord.Embed(
+            title=f"📡 Streams actifs — {len(streams)} en cours",
+            description=f"Serveur: `{self.jellyfin_url}`",
+            color=discord.Color.green(),
+            timestamp=datetime.now()
+        )
+
+        for stream in streams:
+            info = self.format_stream_info(stream)
+            field_value = (
+                f"{info['status']} • {info['quality']}\n"
+                f"👤 **{info['user']}** sur {info['client']} ({info['device']})\n"
+                f"⏱️ {info['progress']}"
+            )
+            embed.add_field(
+                name=f"🎬 {info['display_title']}",
+                value=field_value,
+                inline=False
+            )
+
+        embed.set_footer(text="Jellyfin Bot", icon_url="https://jellyfin.org/images/favicon.ico")
+        await ctx.send(embed=embed)
+
+    @jellyfin_group.command(name="stats")
+    async def jellyfin_stats(self, ctx, days: int = 7):
+        """Statistiques de visionnage des X derniers jours: !jellyfin stats [jours]"""
+        if days < 1 or days > 30:
+            await ctx.send("❌ Le nombre de jours doit être entre 1 et 30.")
+            return
+
+        label = "dernier jour" if days == 1 else f"{days} derniers jours"
+        await ctx.send(f"📊 Récupération des statistiques des {label}...")
+
+        stats, success = await self.get_watch_stats_fallback(days)
+
+        if not success or stats is None:
+            embed = discord.Embed(
+                title="❌ Erreur",
+                description="Impossible de récupérer les statistiques depuis Jellyfin.",
+                color=discord.Color.red()
+            )
+            await ctx.send(embed=embed)
+            return
+
+        total_plays = stats.get("total_plays", 0)
+        user_counts = stats.get("user_counts", {})
+
+        embed = discord.Embed(
+            title=f"📊 Stats Jellyfin — {label}",
+            description=f"Serveur: `{self.jellyfin_url}`",
+            color=discord.Color.teal(),
+            timestamp=datetime.now()
+        )
+
+        embed.add_field(
+            name="🎬 Total lectures",
+            value=f"**{total_plays}** événements de lecture",
+            inline=False
+        )
+
+        if user_counts:
+            # Trier par nombre de lectures décroissant
+            sorted_users = sorted(user_counts.items(), key=lambda x: x[1], reverse=True)
+            user_lines = "\n".join(
+                f"{'🥇' if i == 0 else '🥈' if i == 1 else '🥉' if i == 2 else '👤'} **{user}** — {count} lecture{'s' if count > 1 else ''}"
+                for i, (user, count) in enumerate(sorted_users)
+            )
+            embed.add_field(
+                name="👥 Activité par utilisateur",
+                value=user_lines or "Aucune donnée",
+                inline=False
+            )
+        else:
+            embed.add_field(
+                name="👥 Activité par utilisateur",
+                value="Aucune activité enregistrée sur cette période.",
+                inline=False
+            )
+
+        embed.set_footer(
+            text=f"Jellyfin Bot • Période: {label}",
+            icon_url="https://jellyfin.org/images/favicon.ico"
+        )
+        await ctx.send(embed=embed)
+
+    @jellyfin_group.error
+    async def jellyfin_group_error(self, ctx, error):
+        await ctx.send(f"❌ Une erreur s'est produite: {str(error)}")
 
     @commands.command(name="config_jellyfin")
     @commands.has_permissions(administrator=True)
