@@ -10,16 +10,16 @@ class homebox(commands.Cog):
         self.bot = bot
         # Configuration Jellyfin
         self.jellyfin_url = "https://jellyfin.elfantome.ovh"
-        self.api_key = "6903502dc64c45009719e27c85fa8396"
+        self.api_key = ""
         self.user_id = None
         
         # Configuration Sonarr
         self.sonarr_url = "http://192.168.2.113:8989"
-        self.sonarr_api_key = "b510c49ada25474fb23be54a11c2a225"
+        self.sonarr_api_key = ""
         
         # Configuration Radarr
         self.radarr_url = "http://192.168.2.113:7878"
-        self.radarr_api_key = "67071cbd878e4496b9f047d053f92184"
+        self.radarr_api_key = ""
         
     async def get_jellyfin_user_id(self):
         """Obtient l'ID utilisateur Jellyfin"""
