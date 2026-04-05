@@ -12,9 +12,6 @@
 
 **PythonBot**, créé pour :
 
-* automatiser un serveur
-* monitorer un système
-* jouer avec le réseau
 * apprendre ptyhon,api etc :)
 
 > Héberger sur mon optiplex et me permet d'avoir les stats sonarr,radarr,qbittorrent,temps etc!
