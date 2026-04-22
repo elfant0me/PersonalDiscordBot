@@ -67,21 +67,6 @@ Spawn des boss de **Escape from Tarkov** (eftboss.com)
 
 ---
 
-## Exemple
-
-```
-.nmap 192.168.2.1
-```
-
-## Résultat :
-
-```
-[+] Host is up
-[+] Open ports detected
-```
-
----
-
 ## Tech utilisée
 
 * Python
