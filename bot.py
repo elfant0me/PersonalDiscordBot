@@ -5,6 +5,8 @@ import os
 import sys
 from datetime import datetime
 from config import BOT_TOKEN, BOT_PREFIX, BOT_DESCRIPTION, MESSAGES, COLORS
+import logging
+logging.basicConfig(level=logging.INFO)
 
 # Configuration des intents
 intents = discord.Intents.default()
@@ -85,10 +87,10 @@ async def load_extensions():
         'cogs.tarkov',            # Fichier: cogs/tarkov.py
         'cogs.epicgame',          # Fichier: cogs/epicgame.py
         'cogs.nmap',              # Fichier: cogs/nmap.py
-        'cogs.reminder',          # Fichier: cogs/reminder.py
         'cogs.geo',               # Fichier: cogs/geo.py
         'cogs.meteo',             # Fichier: cogs/meteo.py
-        'cogs.homebox',          # Fichier: cogs/homebox.py 
+        'cogs.monitoring',         # Fichier: cogs/monitoring.py
+        'cogs.servarr',           # Fichier: cogs/servarr.py
         'cogs.qbittorrent',          # Fichier: cogs/qbittorrent.py 
     ]
     

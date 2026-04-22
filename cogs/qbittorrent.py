@@ -2,15 +2,16 @@ import discord
 from discord.ext import commands
 import aiohttp
 import asyncio
+import os
 from typing import Optional
+import config
 
 class QBittorrent(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        # Configuration - à modifier selon votre installation
-        self.qb_url = "http://192.168.2.113:8080"  # URL de qBittorrent WebUI
-        self.username = "elfantome"  # Nom d'utilisateur
-        self.password = "Q6080e49#"  # Mot de passe
+        self.qb_url = getattr(config, "QBITTORRENT_URL", None) or os.getenv("QBITTORRENT_URL")
+        self.username = getattr(config, "QBITTORRENT_USERNAME", None) or os.getenv("QBITTORRENT_USERNAME")
+        self.password = getattr(config, "QBITTORRENT_PASSWORD", None) or os.getenv("QBITTORRENT_PASSWORD")
         self.cookie = None
         
     async def login(self):

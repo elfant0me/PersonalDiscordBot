@@ -312,7 +312,6 @@ class Botinfo(commands.Cog):
             
         return clean
 
-    @commands.command(name="temp")
     async def temperature(self, ctx):
         """Affiche les températures du système"""
         temps = self.get_temperatures()
@@ -554,16 +553,9 @@ class Botinfo(commands.Cog):
     async def prefix(self, ctx):
         """Affiche le préfixe du bot"""
         await ctx.send(f"📌 Mon préfixe actuel est : `{BOT_PREFIX}`")
-    
-    @commands.command()
-    async def ping(self, ctx):
-        """Affiche le ping du bot"""
-        latency = round(self.bot.latency * 1000)
-        await ctx.send(f"🏓 **Pong:** {latency}ms")
 
     @sysinfo.error
     @botinfo.error
-    @temperature.error
     async def command_error(self, ctx, error):
         """Gère les erreurs des commandes"""
         embed = discord.Embed(

@@ -17,6 +17,15 @@ class Steam(commands.Cog):
         self.user_steam_data = {}
         self.load_user_data()
 
+    def _http_headers(self):
+        return {
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/124.0.0.0 Safari/537.36"
+            )
+        }
+
     def load_user_data(self):
         try:
             with open('userdata/steam_data.json', 'r', encoding='utf-8') as f:
@@ -223,9 +232,7 @@ class Steam(commands.Cog):
 
     async def fetch_charts_top10(self):
         url = "https://steamcharts.com/top"
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-        }
+        headers = self._http_headers()
         async with aiohttp.ClientSession() as session:
             async with session.get(url, headers=headers) as resp:
                 html = await resp.text()
@@ -256,9 +263,7 @@ class Steam(commands.Cog):
 
     async def fetch_steamcharts_stats(self, appid: int):
         url = f"https://steamcharts.com/app/{appid}"
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-        }
+        headers = self._http_headers()
         async with aiohttp.ClientSession() as session:
             async with session.get(url, headers=headers) as resp:
                 if resp.status != 200:
@@ -325,9 +330,7 @@ class Steam(commands.Cog):
             async with aiohttp.ClientSession() as session:
                 # Utilise l'API Steam pour chercher le jeu
                 url = f"https://store.steampowered.com/api/storesearch/?term={game_name}&l=english&cc=US"
-                headers = {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-                }
+                headers = self._http_headers()
                 async with session.get(url, headers=headers) as response:
                     if response.status == 200:
                         data = await response.json()
@@ -347,9 +350,7 @@ class Steam(commands.Cog):
     async def fetch_steamcharts_record(self, appid: int):
         """Récupère spécifiquement le record de joueurs simultanés"""
         url = f"https://steamcharts.com/app/{appid}"
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-        }
+        headers = self._http_headers()
         async with aiohttp.ClientSession() as session:
             async with session.get(url, headers=headers) as resp:
                 if resp.status != 200:
@@ -408,8 +409,96 @@ class Steam(commands.Cog):
 
         except Exception as e:
             print(f"Erreur scraping record SteamCharts pour {appid} : {e}")
-        
+
         return record_info if record_info else None
+
+    async def fetch_steamdb_trending(self):
+        """Récupère les jeux tendance/populaires via SteamDB."""
+        url = "https://steamdb.info/charts/"
+
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, headers=self._http_headers()) as resp:
+                if resp.status != 200:
+                    return []
+                html = await resp.text()
+
+        soup = BeautifulSoup(html, "html.parser")
+        rows = soup.select("table.table-products tbody tr")
+        trending_games = []
+
+        for row in rows:
+            cells = row.find_all("td")
+            if len(cells) < 5:
+                continue
+
+            links = row.find_all("a", href=True)
+            appid = None
+            name = None
+            for link in links:
+                href = link.get("href", "")
+                match = re.search(r"/app/(\d+)/", href)
+                if match:
+                    appid = int(match.group(1))
+                    name = link.get_text(strip=True)
+                    if name:
+                        break
+
+            if not appid or not name:
+                continue
+
+            numeric_values = []
+            for cell in cells:
+                text = cell.get_text(" ", strip=True).replace(",", "")
+                match = re.search(r"(\d+)", text)
+                if match:
+                    numeric_values.append(int(match.group(1)))
+
+            players = numeric_values[0] if numeric_values else 0
+            trending_games.append(
+                {
+                    "appid": appid,
+                    "name": name,
+                    "players": players,
+                    "url": f"https://steamdb.info/app/{appid}/",
+                }
+            )
+
+            if len(trending_games) >= 10:
+                break
+
+        return trending_games
+
+    async def fetch_steam_specials(self):
+        """Récupère les rabais du moment via l'API Steam Store."""
+        url = "https://store.steampowered.com/api/featuredcategories/?cc=CA&l=french"
+
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, headers=self._http_headers()) as response:
+                if response.status != 200:
+                    return []
+                data = await response.json()
+
+        specials = data.get("specials", {}).get("items", [])
+        deals = []
+        for item in specials[:10]:
+            appid = item.get("id")
+            name = item.get("name", "Jeu inconnu")
+            discount = item.get("discount_percent", 0)
+            final_price = item.get("final_price", 0)
+            original_price = item.get("original_price", 0)
+
+            deals.append(
+                {
+                    "appid": appid,
+                    "name": name,
+                    "discount": discount,
+                    "final_price": final_price / 100 if final_price else 0,
+                    "original_price": original_price / 100 if original_price else 0,
+                    "url": f"https://store.steampowered.com/app/{appid}/",
+                }
+            )
+
+        return deals
 
     @commands.command(name='steamtop', help='Tops des jeux steam')
     async def steam_top(self, ctx):
@@ -429,6 +518,65 @@ class Steam(commands.Cog):
             await ctx.send(embed=embed)
         except Exception as e:
             await ctx.send(f"❌ Erreur lors de la récupération du top SteamCharts : {e}")
+
+    @commands.command(name='steamtrending', aliases=['steamtrend', 'steamhot'], help='Jeux populaires / tendance du moment')
+    async def steam_trending(self, ctx):
+        try:
+            games = await self.fetch_steamdb_trending()
+            if not games:
+                return await ctx.send("❌ Impossible de récupérer les jeux tendance sur SteamDB pour le moment.")
+
+            embed = discord.Embed(
+                title="📈 Jeux Steam tendance du moment",
+                description="Sélection basée sur les charts SteamDB.",
+                color=discord.Color.orange()
+            )
+
+            for index, game in enumerate(games[:10], start=1):
+                players = game.get("players", 0)
+                value = f"👥 Joueurs: `{players:,}`\n🔗 [SteamDB]({game['url']})"
+                embed.add_field(
+                    name=f"{index}. 🎮 {game['name']}",
+                    value=value,
+                    inline=False
+                )
+
+            embed.set_footer(text="Source: steamdb.info")
+            await ctx.send(embed=embed)
+        except Exception as e:
+            await ctx.send(f"❌ Erreur lors de la récupération des tendances SteamDB : {e}")
+
+    @commands.command(name='steamdeals', aliases=['steamrabais', 'steamdiscounts'], help='Rabais Steam du moment')
+    async def steam_deals(self, ctx):
+        try:
+            deals = await self.fetch_steam_specials()
+            if not deals:
+                return await ctx.send("❌ Impossible de récupérer les rabais Steam pour le moment.")
+
+            embed = discord.Embed(
+                title="💸 Rabais Steam du moment",
+                description="Offres spéciales récupérées depuis le Steam Store.",
+                color=discord.Color.green()
+            )
+
+            for index, deal in enumerate(deals[:10], start=1):
+                original = f"{deal['original_price']:.2f}$" if deal["original_price"] else "N/A"
+                final = f"{deal['final_price']:.2f}$" if deal["final_price"] else "Gratuit"
+                value = (
+                    f"🏷️ Rabais: `-{deal['discount']}%`\n"
+                    f"💰 Prix: `{final}` (avant `{original}`)\n"
+                    f"🔗 [Steam Store]({deal['url']})"
+                )
+                embed.add_field(
+                    name=f"{index}. 🎮 {deal['name']}",
+                    value=value,
+                    inline=False
+                )
+
+            embed.set_footer(text="Source: store.steampowered.com")
+            await ctx.send(embed=embed)
+        except Exception as e:
+            await ctx.send(f"❌ Erreur lors de la récupération des rabais Steam : {e}")
 
     @commands.command(name='steamstats', help='Statistiques détaillées d\'un jeu Steam')
     async def steam_stats(self, ctx, *, game_input=None):
@@ -583,10 +731,12 @@ class Steam(commands.Cog):
         embed.add_field(name="`.steam`", value="Affiche ton profil Steam", inline=False)
         embed.add_field(name="`.steam @membre`", value="Affiche le Steam d'un autre", inline=False)
         embed.add_field(name="`.steamtop`", value="Top 10 jeux les plus joués (SteamCharts)", inline=False)
+        embed.add_field(name="`.steamtrending`", value="Jeux populaires / tendance du moment (SteamDB)", inline=False)
+        embed.add_field(name="`.steamdeals`", value="Rabais Steam du moment", inline=False)
         embed.add_field(name="`.steamstats <jeu|appid>`", value="Stats détaillées d'un jeu Steam", inline=False)
         embed.add_field(name="`.steamrecord <jeu|appid>`", value="Record de joueurs simultanés d'un jeu", inline=False)
         embed.add_field(name="ℹ️ Notes", value="• Profil public requis\n• Game Collector affiche vos statistiques de collection\n• Vous pouvez utiliser le nom du jeu ou son AppID\n• La recherche fonctionne mieux en anglais", inline=False)
-        embed.add_field(name="💡 Exemples", value="`.steamstats Counter-Strike 2`\n`.steamrecord 730`\n`.steamstats Among Us`", inline=False)
+        embed.add_field(name="💡 Exemples", value="`.steamtrending`\n`.steamdeals`\n`.steamstats Counter-Strike 2`\n`.steamrecord 730`", inline=False)
         await ctx.send(embed=embed)
 
 async def setup(bot):

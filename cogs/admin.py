@@ -6,11 +6,22 @@ from utils.permissions import require_admin
 import os
 import sys
 from config import BOT_PREFIX, COLORS
+from typing import Optional
 
 class Admin(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+
+    def _normalize_extension_name(self, extension: Optional[str]) -> Optional[str]:
+        """Normalise le nom d'extension saisi par l'utilisateur."""
+        if not extension:
+            return None
+
+        extension = extension.strip()
+        if extension.startswith("cogs."):
+            return extension
+        return f"cogs.{extension}"
 
     
 
@@ -54,6 +65,7 @@ class Admin(commands.Cog):
                 description=f"Nouveau statut: **{game_name}**",
                 color=COLORS.get('success', discord.Color.green())
             )
+            embed.set_thumbnail(url=self.bot.user.display_avatar.url)
         else:
             await self.bot.change_presence(activity=None)
             embed = discord.Embed(
@@ -171,8 +183,11 @@ class Admin(commands.Cog):
         if not extension:
             await ctx.send(f"❌ Syntaxe : `{BOT_PREFIX}cogs load <nom>`")
             return
+
+        ext = self._normalize_extension_name(extension)
+
         try:
-            await self.bot.load_extension(f"cogs.{extension}")
+            await self.bot.load_extension(ext)
             await ctx.send(f"✅ Cog `{extension}` chargé avec succès.")
         except Exception as e:
             await ctx.send(f"❌ Erreur lors du chargement de `{extension}` : `{e}`")
@@ -184,8 +199,10 @@ class Admin(commands.Cog):
         if not extension:
             await ctx.send(f"❌ Syntaxe : `{BOT_PREFIX}cogs reload <nom>`")
             return
+
+        ext = self._normalize_extension_name(extension)
         try:
-            await self.bot.reload_extension(f"cogs.{extension}")
+            await self.bot.reload_extension(ext)
             await ctx.send(f"♻️ Cog `{extension}` rechargé avec succès.")
         except Exception as e:
             await ctx.send(f"❌ Erreur lors du rechargement de `{extension}` : `{e}`")
@@ -219,8 +236,10 @@ class Admin(commands.Cog):
         if not extension:
             await ctx.send(f"❌ Syntaxe : `{BOT_PREFIX}cogs unload <nom>`")
             return
+
+        ext = self._normalize_extension_name(extension)
         try:
-            await self.bot.unload_extension(f"cogs.{extension}")
+            await self.bot.unload_extension(ext)
             await ctx.send(f"🗑️ Cog `{extension}` déchargé avec succès.")
         except Exception as e:
             await ctx.send(f"❌ Erreur lors du déchargement de `{extension}` : `{e}`")
